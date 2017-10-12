@@ -8,13 +8,17 @@ deb http://ftp.jaist.ac.jp/raspbian/ stretch main contrib non-free rpi
 #deb-src http://archive.raspbian.org/raspbian/ stretch main contrib non-free rpi
 ```
 
-## Prerequisites
+## Full-HD video playback on chromium
+
+### Prerequisites
+
+`mesa-vdpau-drivers` is required to realize smooth Full-HD video playback on chromium.
 
 ```
-sudo apt-get install unclutter mesa-vdpau-drivers
+sudo apt-get install mesa-vdpau-drivers
 ```
 
-## raspi-config
+### raspi-config
 
 Launch raspi-config and change GPU memory to 128MB on \[7 Advanced Options\] - \[A3 Memory Split\].
 
@@ -22,7 +26,7 @@ Launch raspi-config and change GPU memory to 128MB on \[7 Advanced Options\] - \
 sudo raspi-config
 ```
 
-## chromium-browser
+### chromium-browser
 
 On `chrome://flags`, enable the following parameters:
 
@@ -30,6 +34,8 @@ On `chrome://flags`, enable the following parameters:
 #enable-gpu-rasterization
 #enable-zero-copy
 ```
+
+You should launch `chromium-browser` with `--enable-native-gpu-memory-buffers` option to really activate these options; see the actual command line below.
 
 ## Kiosk GUI
 
@@ -40,7 +46,6 @@ On `chrome://flags`, enable the following parameters:
 @xset -dpms
 @xset s noblank
 
-@unclutter
 @chromium-browser --enable-native-gpu-memory-buffers --incognito --kiosk file:///home/pi/somewhere/kiosk.html
 
 /home/pi/mousetrick.sh
