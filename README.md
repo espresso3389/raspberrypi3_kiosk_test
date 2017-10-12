@@ -1,4 +1,4 @@
-## apt
+## apt Configuration
 
 Update `/etc/apt/source.list` to enable faster download in Japan:
 
@@ -8,10 +8,18 @@ deb http://ftp.jaist.ac.jp/raspbian/ stretch main contrib non-free rpi
 #deb-src http://archive.raspbian.org/raspbian/ stretch main contrib non-free rpi
 ```
 
-## Install certain packages
+## Prerequisites
 
 ```
 sudo apt-get install unclutter mesa-vdpau-drivers
+```
+
+## raspi-config
+
+Launch raspi-config and change GPU memory to 128MB on \[7 Advanced Options\] - \[A3 Memory Split\].
+
+```
+sudo raspi-config
 ```
 
 ## chromium-browser
@@ -27,14 +35,29 @@ On `chrome://flags`, enable the following parameters:
 
 `~/.config/lxsession/LXDE-pi/autostart`:
 
-```
+```sh
 @xset s off
 @xset -dpms
 @xset s noblank
 
 @unclutter
-@chromium-browser --enable-native-gpu-memory-buffers --incognito --kiosk http://example.com
+@chromium-browser --enable-native-gpu-memory-buffers --incognito --kiosk file:///home/pi/somewhere/kiosk.html
+
+/home/pi/mousetrick.sh
 ```
+
+And `/home/pi/mousetrick.sh` is like the following:
+
+```sh
+#!/bin/sh
+
+sleep 8
+xdotool mousemove 0 0
+sleep 1
+xdotool mousemove 1920 1080
+```
+
+The file is used to hide mouse on chromium-browser; even if we use `cursor: none` on element style, chromium does not hide the cursor unless mouse moves. The actual sleep duration may vary according to the HTML contents.
 
 # Make SD card almost read-only using overlayFS
 
